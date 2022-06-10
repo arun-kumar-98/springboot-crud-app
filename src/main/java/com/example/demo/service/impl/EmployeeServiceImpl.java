@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.entity.Address;
 import com.example.demo.entity.Employee;
+import com.example.demo.entity.Role;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.IAddressRepository;
 import com.example.demo.repository.IEmployeeRepository;
@@ -9,6 +10,7 @@ import com.example.demo.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -52,5 +54,31 @@ public class EmployeeServiceImpl implements IEmployeeService {
             repository.delete(employee);
         }
         return "employee removed from database with employee id:  " + employee.getEid();
+    }
+
+    @Override
+    public Employee updateAllEmployeeRecords(Integer id, Employee employee) {
+        Employee employee1 = repository.findById(id).get();
+        if (repository.existsById(id) && id != null) {
+            employee1.setEmail(employee.getEmail());
+            employee1.setEmpName(employee.getEmpName());
+            employee1.setPassword(employee.getPassword());
+            Collection<Address> addressCollection = employee1.getAddresses();
+            Collection<Address> addresses = employee.getAddresses();
+            Address address1 = new Address();
+            for (Address address : addresses) {
+                address1.setLine1(address.getLine1());
+                address1.setLine2(address.getLine2());
+                address1.setPincode(address.getPincode());
+                address1.setState(address.getState());
+                addresses.add(address1);
+                break;
+            }
+            Role role = employee.getRole();
+            employee1.setRole(role);
+            employee1.setAddresses(addresses);
+        }
+
+        return repository.save(employee1);
     }
 }

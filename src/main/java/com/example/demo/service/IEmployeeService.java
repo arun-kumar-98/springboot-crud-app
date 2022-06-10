@@ -14,4 +14,6 @@ public interface IEmployeeService {
 
     String removeEmployee(Integer id);
 
+    Employee updateAllEmployeeRecords(Integer id, Employee employee);
+
 }
