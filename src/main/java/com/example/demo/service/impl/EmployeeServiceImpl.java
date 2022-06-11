@@ -10,6 +10,7 @@ import com.example.demo.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -59,6 +60,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
     @Override
     public Employee updateAllEmployeeRecords(Integer id, Employee employee) {
         Employee employee1 = repository.findById(id).get();
+        Collection<Address> empCollection = new ArrayList<>();
         if (repository.existsById(id) && id != null) {
             employee1.setEmail(employee.getEmail());
             employee1.setEmpName(employee.getEmpName());
@@ -71,12 +73,12 @@ public class EmployeeServiceImpl implements IEmployeeService {
                 address1.setLine2(address.getLine2());
                 address1.setPincode(address.getPincode());
                 address1.setState(address.getState());
-                addresses.add(address1);
-                break;
+                empCollection.add(address1);
+
             }
             Role role = employee.getRole();
             employee1.setRole(role);
-            employee1.setAddresses(addresses);
+            employee1.setAddresses(empCollection);
         }
 
         return repository.save(employee1);
